@@ -23,6 +23,7 @@ class BufferManager:
 
     @contextlib.contextmanager
     def pin(self, pg_id):
+        # TODO: Race condition if two threads create a semaphore for the same pg_id at same time
         if pg_id not in self._buf:
             self._buf[pg_id] = (Semaphore(1), FileManager.instance().read(pg_id))
             print(f"Loaded {pg_id}")
