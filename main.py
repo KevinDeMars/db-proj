@@ -1,7 +1,10 @@
+from db.operators import *
+
 
 def main():
-    pass
-
+    it = CsvScan(Table("my_table.csv"))
+    for row in it.rows():
+        print(row)
 
 
 if __name__ == '__main__':
