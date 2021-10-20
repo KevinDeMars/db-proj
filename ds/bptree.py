@@ -1,3 +1,4 @@
+import pickle
 from typing import Optional, TypeVar, Generic, List
 
 from .bptreenode import Node, LeafNode, InternalNode
@@ -7,7 +8,7 @@ V = TypeVar("V")
 
 
 class BPlusTree(Generic[K, V]):
-    def __init__(self, n: int):
+    def __init__(self, n: int = 100):
         self.n = n
         self.root: Optional[Node] = None
 
@@ -99,21 +100,30 @@ class BPlusTree(Generic[K, V]):
     def is_empty(self):
         return self.root is None
 
-    def print(self, n=None):
-        if n is None:
-            n = self.root
-            print('Root:', n)
-        print(n, ':', sep='')
-        if isinstance(n, InternalNode):
-            for p, k in zip(n.pointers, n.keys):
+    def print(self, node=None):
+        if node is None:
+            node = self.root
+            print('Root:', node)
+        print(node, ':', sep='')
+        if isinstance(node, InternalNode):
+            for p, k in zip(node.pointers, node.keys):
                 print(f'{p}|{k}|', end='')
-            print(f'{n.pointers[-1]}')
+            print(f'{node.pointers[-1]}')
 
-            for p in n.pointers:
+            for p in node.pointers:
                 self.print(p)
-        elif isinstance(n, LeafNode):
-            for p, k in zip(n.pointers, n.keys):
+        elif isinstance(node, LeafNode):
+            for p, k in zip(node.pointers, node.keys):
                 # print(f'({len(p)} rows)|{k}')
                 print(f'{p}|{k}|', end='')
-            print(n.next)
+            print(node.next)
             print()
+
+    @staticmethod
+    def load(fname: str) -> 'BPlusTree':
+        with open(fname, 'rb') as f:
+            return pickle.load(f)
+
+    def save(self, fname: str):
+        with open(fname, 'wb') as f:
+            pickle.dump(self, f)
