@@ -1,6 +1,7 @@
 from typing import List
 
-from db.operators import csv_scan, project, cross_product
+from db.operators import csv_scan, project
+from db.operators.cross_product import cross_product
 from ds.bptree import BPlusTree
 
 
@@ -19,22 +20,28 @@ def execute(query: List[str]):
             return
 
         if len(args) == 1:
-            # TODO
-            # return whole row
+            # TODO return whole row
             pass
         else:
+            # TODO check for output file
             # get attributes
             filename, attributes = args[0], args[1:]
 
             # call project operator
             result = project(csv_scan(filename), attributes)
 
-            # return results
-            return result;
+            # TODO write to output file if there is one
+
+            # for testing purposes, print right now
+            for r in result.rows():
+                print(r)
+
     elif cmd == 'CROSS':
         # check arg length
         args = query[1:]
-        if len(args) < 2:
+
+        # check for all three params
+        if len(args) < 3:
             print('Usage: cross <input1_filename> <input2_filename> <output_file>')
             return
 
@@ -42,7 +49,11 @@ def execute(query: List[str]):
 
         result = cross_product(csv_scan(input1_filename), csv_scan(input2_filename))
 
-        return result;
+        # TODO write to output file
+
+        # for testing purposes, print right now
+        for r in result.rows():
+            print(r)
 
     elif cmd == 'JOIN':
         # TODO
