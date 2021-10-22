@@ -1,6 +1,6 @@
 from typing import List
 
-from db.operators import csv_scan, project
+from db.operators import csv_scan, project, cross_product
 from ds.bptree import BPlusTree
 
 
@@ -31,10 +31,20 @@ def execute(query: List[str]):
 
             # return results
             return result;
+    elif cmd == 'CROSS':
+        # check arg length
+        args = query[1:]
+        if len(args) < 2:
+            print('Usage: cross <input1_filename> <input2_filename> <output_file>')
+            return
+
+        input1_filename, input2_filename = args[0], args[1]
+
+        result = cross_product(csv_scan(input1_filename), csv_scan(input2_filename))
+
+        return result;
+
     elif cmd == 'JOIN':
-        # TODO
-        pass
-    elif cmd == 'CROSS_PRODUCT':
         # TODO
         pass
     # For testing
