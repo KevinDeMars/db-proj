@@ -2,6 +2,7 @@ from typing import List
 
 from db.operators import csv_scan, project
 from db.operators.cross_product import cross_product
+from db.operators.select import select
 from ds.bptree import BPlusTree
 
 
@@ -10,8 +11,21 @@ def execute(query: List[str]):
     if cmd == 'BTREE':
         btree(query[1:])
     elif cmd == 'SELECT':
-        # TODO
-        pass
+        # check arg length
+        args = query[1:]
+        if len(args) < 4:
+            print('Usage: project <input_filename> <output_filename> <attribute> <constraint>')
+            return
+        input_filename, output_filename = args[0], args[1]
+
+        res = select(csv_scan(input_filename), query[3:])
+
+        # TODO write to output file if there is one
+
+        # for testing purposes, print right now
+        for r in res.rows():
+            print(r)
+
     elif cmd == 'PROJECT':
         # check arg length
         args = query[1:]
