@@ -1,6 +1,6 @@
 from typing import List
 
-from db.operators import csv_scan
+from db.operators import csv_scan, project
 from ds.bptree import BPlusTree
 
 
@@ -12,9 +12,24 @@ def execute(query: List[str]):
         # TODO
         pass
     elif cmd == 'PROJECT':
+        # check arg length
+        args = query[1:]
+        if len(args) < 2:
+            print('Usage: project <filename> <attributes>')
+            return
+
+        # get attributes
+        filename, attributes = args[0], args[1:]
+
+        # call project operator
+        result = project(csv_scan(filename), attributes)
+
+        # return results
+        return result;
+    elif cmd == 'JOIN':
         # TODO
         pass
-    elif cmd == 'JOIN':
+    elif cmd == 'CROSS_PRODUCT':
         # TODO
         pass
     # For testing

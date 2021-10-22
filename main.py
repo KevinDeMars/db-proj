@@ -9,7 +9,9 @@ def main():
         query = input('Query: ').split(' ')
     else:
         query = sys.argv[1:]
-    query_processor.execute(query)
+    res = query_processor.execute(query)
+    for r in res.rows():
+        print(r)
 
 if __name__ == '__main__':
     main()
