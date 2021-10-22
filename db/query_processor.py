@@ -14,18 +14,23 @@ def execute(query: List[str]):
     elif cmd == 'PROJECT':
         # check arg length
         args = query[1:]
-        if len(args) < 2:
-            print('Usage: project <filename> <attributes>')
+        if len(args) < 1:
+            print('Usage: project <input_filename> optional: <output_filename> <attributes>')
             return
 
-        # get attributes
-        filename, attributes = args[0], args[1:]
+        if len(args) == 1:
+            # TODO
+            # return whole row
+            pass
+        else:
+            # get attributes
+            filename, attributes = args[0], args[1:]
 
-        # call project operator
-        result = project(csv_scan(filename), attributes)
+            # call project operator
+            result = project(csv_scan(filename), attributes)
 
-        # return results
-        return result;
+            # return results
+            return result;
     elif cmd == 'JOIN':
         # TODO
         pass
