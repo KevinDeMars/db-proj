@@ -66,6 +66,7 @@ def execute(query: List[str]):
         # TODO write to output file
 
         # for testing purposes, print right now
+        print(result.col_names)
         for r in result.rows():
             print(r)
 
