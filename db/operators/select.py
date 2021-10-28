@@ -4,10 +4,10 @@ from db.page import Page
 from db.relation import Relation
 
 
-def select(rel: Relation, attrs: List[str]) -> Relation:
+def select(rel: Relation, attrs: List[str], filename: str) -> Relation:
     cols = rel.col_names
     cols[-1] = cols[-1].split()
-    return Relation(cols, _pages(rel, attrs))
+    return Relation(cols, _pages(rel, attrs, filename))
 
 def get_attr_index(col_names, attr):
     # get the index of the attribute
@@ -27,10 +27,16 @@ def get_constraint_index(col_names, constr):
         idx = idx + 1
     return -1
 
-def _pages(rel, attrs: List[str]) -> Generator:
-    if isinstance(attrs[1], int):
-        # TODO comparing to integer value
-        pass
+def _pages(rel, attrs: List[str], filename) -> Generator:
+    if attrs[1].isdigit():
+        # create b+ tree implementation
+        tree = rel.create_index(attrs[0], filename + '.' + attrs[0] + '.btree')
+        out_page = Page()
+        # get rows in range
+        rows = tree.get(int(attrs[1]))
+        for row in rows:
+            out_page.rows.append(row)
+        yield out_page
     else:
         # comparing to other attribute
         a_idx = get_attr_index(rel.col_names, attrs[0])

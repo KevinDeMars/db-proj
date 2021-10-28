@@ -16,9 +16,12 @@ def execute(query: List[str]):
         if len(args) < 4:
             print('Usage: project <input_filename> <output_filename> <attribute> <constraint>')
             return
+
+        # get the file names
         input_filename, output_filename = args[0], args[1]
 
-        res = select(csv_scan(input_filename), query[3:])
+        # select the requested attribute
+        res = select(csv_scan(input_filename), query[3:], input_filename)
 
         # TODO write to output file if there is one
 
@@ -34,8 +37,12 @@ def execute(query: List[str]):
             return
 
         if len(args) == 1:
-            # TODO return whole row
-            pass
+            # return entire file
+            result = csv_scan(args[0])
+
+            # for testing purposes, print right now
+            for r in result.rows():
+                print(r)
         else:
             # TODO check for output file
             # get attributes
@@ -59,9 +66,11 @@ def execute(query: List[str]):
             print('Usage: cross <input1_filename> <input2_filename> <output_file>')
             return
 
+        # the file names
         input1_filename, input2_filename = args[0], args[1]
 
-        result = cross_product(csv_scan(input1_filename), csv_scan(input2_filename))
+        # get the cross product of the two relations
+        result = cross_product(csv_scan(input1_filename), csv_scan(input2_filename), input1_filename[:-3], input2_filename[:-3])
 
         # TODO write to output file
 
