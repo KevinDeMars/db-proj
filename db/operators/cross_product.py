@@ -4,16 +4,16 @@ from db.page import Page
 from db.relation import Relation
 
 # get the cross product of two relations
-def cross_product(rel1: Relation, rel2: Relation, fname1: str, fname2: str) -> Relation:
+def cross_product(rel1: Relation, rel2: Relation) -> Relation:
     # create new column name list
-    attrs = _column_names(rel1, fname1) + _column_names(rel2, fname2)
+    attrs = _column_names(rel1) + _column_names(rel2)
     # return the cross product relation
     return Relation(attrs, _pages(rel1, rel2))
 
 
 # get the crossed column names prefixed by relation name
-def _column_names(rel, f):
-    return [f + '.' + col_name for col_name in rel.col_names]
+def _column_names(rel):
+    return [rel.filename + '.' + col_name for col_name in rel.col_names]
 
 # get the crossed pages of the two relations
 def _pages(rel1, rel2) -> Generator:

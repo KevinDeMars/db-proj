@@ -3,7 +3,6 @@ from typing import List
 from db.operators import csv_scan, project, csv_dump
 from db.operators.cross_product import cross_product
 from db.operators.join import join
-from db.operators.join_predicate import AttrEqConstant, AttrEqAttr
 from db.operators.select import select
 from ds.bptree import BPlusTree
 
@@ -16,26 +15,22 @@ def execute(query: List[str]):
         # check arg length
         args = query[1:]
         if len(args) < 4:
-            print('Usage: project <input_filename> <output_filename> <attribute> <constant or other attribute>')
+            print('Usage: project <input_filename> <output_filename> <attribute> <constraint (attribute or constant)>')
             return
 
         # get the file names
         input_filename, output_filename = args[0], args[1]
-        attr1 = args[2]
-        attr_or_const = args[3]
-
-        if attr_or_const.isnumeric():
-            theta = AttrEqConstant(attr1, int(attr_or_const))
-        else:
-            theta = AttrEqAttr(attr1, attr_or_const)
-
+        attr = args[2]
+        constraint = args[3]
+        # Convert constraint to int if it looks like an int
+        if constraint.isnumeric():
+            constraint = int(constraint)
         # select the requested attribute
         res = csv_dump(
-            select(csv_scan(input_filename), theta),
+            select(csv_scan(input_filename), attr, constraint),
             output_filename
         )
 
-        # for testing purposes, print right now
         for r in res.rows():
             print(r)
 
@@ -53,7 +48,6 @@ def execute(query: List[str]):
             output_file
         )
 
-        # for testing purposes, print right now
         for r in result.rows():
             print(r)
 
@@ -71,12 +65,10 @@ def execute(query: List[str]):
 
         # get the cross product of the two relations
         result = csv_dump(
-            cross_product(csv_scan(in1), csv_scan(in2), in1, in2),
+            cross_product(csv_scan(in1), csv_scan(in2)),
             out
         )
 
-        # for testing purposes, print right now
-        print(result.col_names)
         for r in result.rows():
             print(r)
 
@@ -94,17 +86,12 @@ def execute(query: List[str]):
 
         # get the cross product of the two relations
         result = csv_dump(
-            join(csv_scan(in1), csv_scan(in2), in1, in2),
+            join(csv_scan(in1), csv_scan(in2)),
             out
         )
 
-        # for testing purposes, print right now
-        print(result.col_names)
         for r in result.rows():
             print(r)
-    # For testing
-    elif cmd == 'CREATE_INDEX':
-        create_index(query[1:])
     else:
         print('Invalid operator: ' + cmd)
 
@@ -114,11 +101,3 @@ def btree(args: List[str]):
         print('Usage: btree <filename.btree>')
         return
     BPlusTree.load(args[0]).print()
-
-def create_index(args: List[str]):
-    if len(args) != 2:
-        print('Usage: make_btree <filename> <attribute>')
-        return
-    filename, attribute = args[0], args[1]
-    R = csv_scan(filename)
-    R.create_index(attribute)

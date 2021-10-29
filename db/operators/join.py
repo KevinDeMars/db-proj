@@ -2,16 +2,33 @@ import pickle
 
 from typing import Generator, List
 
-from db.operators import csv_scan
+from db.operators import csv_scan, csv_dump
 from db.operators.project import project
 from db.operators.select import select
 from db.operators.cross_product import cross_product
 from db.page import Page
 from db.relation import Relation
 
-def join(r1: Relation, r2: Relation, f1: str, f2: str) -> Relation:
-    attrs = _same_attributes(r1, r2)
-    return Relation(attrs, _pages(r1, r2, attrs, f1, f2))
+
+def join(r1: Relation, r2: Relation) -> Relation:
+    common_attributes = _same_attributes(r1, r2)
+    # get cross product and dump intermediate result
+    result = csv_dump(
+        cross_product(r1, r2),
+        "join_" + r1.filename + "_" + r2.filename + ".csv"
+    )
+    # select where join attrs are equal
+    for attr in common_attributes:
+        a1 = r1.filename + '.' + attr
+        a2 = r2.filename + '.' + attr
+        result = select(result, a1, a2)
+
+    # For common attribute A, remove table2.A from result but keep table1.A
+    col_names_to_remove = [r2.filename + '.' + col for col in common_attributes]
+    col_names = [col for col in result.col_names if col not in col_names_to_remove]
+    proj = project(result, col_names)
+    return proj
+
 
 # gets the columns the tables will join on
 def _same_attributes(r1, r2) -> List:
@@ -21,24 +38,3 @@ def _same_attributes(r1, r2) -> List:
             if c1 == c2:
                 attrs.append(c1)
     return attrs
-
-def _pages(r1, r2, join_attrs, f1, f2) -> Generator:
-    print("entering")
-    # get cross product
-    rel = cross_product(r1, r2, f1, f2)
-    print(rel.col_names)
-    # select where join attrs are equal
-    for attr in join_attrs:
-        a1 = f1 + '.' + attr
-        a2 = f2 + '.' + attr
-        rel = select(rel, a1, a2)
-
-    for r in rel.rows():
-       print(r)
-    # TODO store intermediate results of each select in file
-    #TODO use project once to get rid of duplicate cols between f1 and f2
-    proj = project(rel, rel.col_names)
-
-    # return pages
-    for p in proj.pages:
-        yield p
