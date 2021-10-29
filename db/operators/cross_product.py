@@ -14,7 +14,8 @@ def cross_product(rel1: Relation, rel2: Relation, fname1: List[str], fname2: str
 def _column_names(rel, f):
     # get the relation column names
     r = rel.col_names
-    r[-1] = r[-1].strip()
+    if "\n" in r[-1]:
+        r[-1] = r[-1][:-1]
     # prefix the column names
     idx = 0
     for i in r:

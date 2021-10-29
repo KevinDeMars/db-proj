@@ -18,9 +18,6 @@ class Relation:
         self.col_names = col_names
         self.pages = pages
 
-    def pages(self) -> Generator:
-        return self.pages
-
     def rows(self):
         for pg in self.pages:
             for r in pg.rows:

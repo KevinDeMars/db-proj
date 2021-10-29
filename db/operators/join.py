@@ -23,10 +23,8 @@ def _same_attributes(r1, r2) -> List:
     return attrs
 
 def _pages(r1, r2, attrs, f1, f2) -> Generator:
-    print("entering")
     # get cross product
     rel = cross_product(r1, r2, f1[:-3], f2[:-3])
-    print(rel.col_names)
     # TODO store cross in a file
     fname = "cross_temp.csv"
     #rel.save(fname)
@@ -38,10 +36,11 @@ def _pages(r1, r2, attrs, f1, f2) -> Generator:
         rel = select(rel,a,fname)
         #sel.save(fname)
 
-    for r in rel.rows():
-       print(r)
     # TODO store intermediate results of each select in file
+
     #TODO use project once to get rid of duplicate cols between f1 and f2
-    proj = project(rel, [])
+    proj = project(rel, rel.col_names)
+
+    # return pages
     for p in proj.pages:
         yield p

@@ -6,7 +6,8 @@ from db.relation import Relation
 
 def select(rel: Relation, attrs: List[str], filename: str) -> Relation:
     cols = rel.col_names
-    cols[-1] = cols[-1].split()
+    if "\n" in cols[-1]:
+        cols[-1] = cols[-1][:-1]
     return Relation(cols, _pages(rel, attrs, filename))
 
 def get_index(col_names, attr):
