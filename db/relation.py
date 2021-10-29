@@ -17,6 +17,7 @@ class Relation:
 
         self.col_names = col_names
         self.pages = pages
+
         if filename is not None:
             self.filename = filename
         else:

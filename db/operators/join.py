@@ -3,7 +3,6 @@ import pickle
 from typing import Generator, List
 
 from db.operators import csv_scan
-from db.operators.join_predicate import AttrEqAttr
 from db.operators.project import project
 from db.operators.select import select
 from db.operators.cross_product import cross_product
@@ -32,12 +31,14 @@ def _pages(r1, r2, join_attrs, f1, f2) -> Generator:
     for attr in join_attrs:
         a1 = f1 + '.' + attr
         a2 = f2 + '.' + attr
-        rel = select(rel, AttrEqAttr(a1, a2))
+        rel = select(rel, a1, a2)
 
     for r in rel.rows():
        print(r)
     # TODO store intermediate results of each select in file
     #TODO use project once to get rid of duplicate cols between f1 and f2
-    proj = project(rel, [])
+    proj = project(rel, rel.col_names)
+
+    # return pages
     for p in proj.pages:
         yield p

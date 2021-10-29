@@ -3,7 +3,6 @@ from typing import Generator, List
 from db.page import Page
 from db.relation import Relation
 
-
 # get the cross product of two relations
 def cross_product(rel1: Relation, rel2: Relation, fname1: str, fname2: str) -> Relation:
     # create new column name list
