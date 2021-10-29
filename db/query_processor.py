@@ -28,13 +28,10 @@ def execute(query: List[str]):
         if constraint.isnumeric():
             constraint = int(constraint)
         # select the requested attribute
-        res = csv_dump(
+        csv_dump(
             select(csv_scan(input_filename), attr, constraint),
             output_filename
-        )
-
-        for r in res.rows():
-            print(r)
+        ).print()
 
     elif cmd == 'PROJECT':
         # check arg length
@@ -45,13 +42,10 @@ def execute(query: List[str]):
 
         input_file, output_file = args[0], args[1]
         attributes = args[2:]
-        result = csv_dump(
+        csv_dump(
             project(csv_scan(input_file), attributes),
             output_file
-        )
-
-        for r in result.rows():
-            print(r)
+        ).print()
 
     elif cmd == 'CROSS':
         # check arg length
@@ -66,13 +60,10 @@ def execute(query: List[str]):
         in1, in2, out = args[0], args[1], args[2]
 
         # get the cross product of the two relations
-        result = csv_dump(
+        csv_dump(
             cross_product(csv_scan(in1), csv_scan(in2)),
             out
-        )
-
-        for r in result.rows():
-            print(r)
+        ).print()
 
     elif cmd == 'JOIN':
         # check arg length
@@ -87,13 +78,10 @@ def execute(query: List[str]):
         in1, in2, out = args[0], args[1], args[2]
 
         # get the cross product of the two relations
-        result = csv_dump(
+        csv_dump(
             join(csv_scan(in1), csv_scan(in2)),
             out
-        )
-
-        for r in result.rows():
-            print(r)
+        ).print()
     else:
         print('Invalid operator: ' + cmd)
 

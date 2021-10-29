@@ -38,6 +38,30 @@ class Relation:
         tree.save(tree_filename)
         return tree
 
+    def print(self):
+        output_lines: List[List[str]] = list()
+        # header row
+        output_lines.append(self.col_names)
+        # Print each row
+        for row in self.rows():
+            row = [str(x) for x in row]  # convert ints to strs
+            output_lines.append(row)
+        num_cols = len(output_lines[0])
+        num_rows = len(output_lines)
+        col_lengths = list()
+        for col in range(num_cols):
+            max_len = max(
+                [len(output_lines[row][col]) for row in range(num_rows)]
+            )
+            col_lengths.append(max_len)
+
+        for line in output_lines:
+            print('| ', end='')
+            for i, col_str in enumerate(line):
+                width = col_lengths[i]
+                print(f' {col_str:>{width}} |', end='')
+            print()
+
     @staticmethod
     def by_id(id: int):
         return Relation.relations[id]
