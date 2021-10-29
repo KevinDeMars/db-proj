@@ -2,6 +2,7 @@ from typing import List
 
 from db.operators import csv_scan, project
 from db.operators.cross_product import cross_product
+from db.operators.join import join
 from db.operators.select import select
 from ds.bptree import BPlusTree
 
@@ -80,8 +81,26 @@ def execute(query: List[str]):
             print(r)
 
     elif cmd == 'JOIN':
-        # TODO
-        pass
+        # check arg length
+        args = query[1:]
+
+        # check for all three params
+        if len(args) < 3:
+            print('Usage: join <input1_filename> <input2_filename> <output_file>')
+            return
+
+        # the file names
+        input1_filename, input2_filename = args[0], args[1]
+
+        # get the cross product of the two relations
+        result = join(csv_scan(input1_filename), csv_scan(input2_filename), input1_filename, input2_filename)
+
+        # TODO write to output file
+
+        # for testing purposes, print right now
+        print(result.col_names)
+        for r in result.rows():
+            print(r)
     # For testing
     elif cmd == 'CREATE_INDEX':
         create_index(query[1:])

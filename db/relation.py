@@ -1,5 +1,6 @@
 from os import path
 from typing import List, Dict, Optional, Generator
+import pickle
 
 from db.page import Page
 from ds.bptree import BPlusTree
@@ -39,3 +40,7 @@ class Relation:
     @staticmethod
     def by_id(id: int):
         return Relation.relations[id]
+
+    def save(self, fname: str):
+        with open(fname, 'wb') as f:
+            pickle.dump(self, f)

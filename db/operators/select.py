@@ -9,20 +9,11 @@ def select(rel: Relation, attrs: List[str], filename: str) -> Relation:
     cols[-1] = cols[-1].split()
     return Relation(cols, _pages(rel, attrs, filename))
 
-def get_attr_index(col_names, attr):
+def get_index(col_names, attr):
     # get the index of the attribute
     idx = 0
     for c in col_names:
         if c == attr:
-            return idx
-        idx = idx + 1
-    return -1
-
-def get_constraint_index(col_names, constr):
-    # get the index of the constraint variable
-    idx = 0
-    for c in col_names:
-        if c == constr:
             return idx
         idx = idx + 1
     return -1
@@ -39,8 +30,8 @@ def _pages(rel, attrs: List[str], filename) -> Generator:
         yield out_page
     else:
         # comparing to other attribute
-        a_idx = get_attr_index(rel.col_names, attrs[0])
-        c_idx = get_constraint_index(rel.col_names, attrs[1])
+        a_idx = get_index(rel.col_names, attrs[0])
+        c_idx = get_index(rel.col_names, attrs[1])
         if a_idx == -1 or c_idx == -1:
             # TODO finish error situation
             print("ERROR: attribute or constraint name not in table")
