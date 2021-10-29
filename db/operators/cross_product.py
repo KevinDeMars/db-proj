@@ -1,7 +1,8 @@
-from typing import Generator, List
+from typing import Generator
 
 from db.page import Page
 from db.relation import Relation
+
 
 # get the cross product of two relations
 def cross_product(rel1: Relation, rel2: Relation) -> Relation:

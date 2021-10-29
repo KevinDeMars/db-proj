@@ -1,7 +1,6 @@
 import sys
 
 from db import query_processor
-from db.operators import *
 
 
 def main():

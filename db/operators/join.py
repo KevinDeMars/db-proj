@@ -1,12 +1,9 @@
-import pickle
+from typing import List
 
-from typing import Generator, List
-
-from db.operators import csv_scan, csv_dump
+from db.operators.csv_dump import csv_dump
+from db.operators.cross_product import cross_product
 from db.operators.project import project
 from db.operators.select import select
-from db.operators.cross_product import cross_product
-from db.page import Page
 from db.relation import Relation
 
 

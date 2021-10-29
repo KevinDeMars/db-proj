@@ -1,8 +1,10 @@
 from typing import List
 
-from db.operators import csv_scan, project, csv_dump
 from db.operators.cross_product import cross_product
+from db.operators.csv_dump import csv_dump
+from db.operators.csv_scan import csv_scan
 from db.operators.join import join
+from db.operators.project import project
 from db.operators.select import select
 from ds.bptree import BPlusTree
 
@@ -15,7 +17,7 @@ def execute(query: List[str]):
         # check arg length
         args = query[1:]
         if len(args) < 4:
-            print('Usage: project <input_filename> <output_filename> <attribute> <constraint (attribute or constant)>')
+            print('Usage: select <input_filename> <output_filename> <attribute> <constraint (attribute or constant)>')
             return
 
         # get the file names

@@ -1,4 +1,4 @@
-from typing import Generator, List, Union
+from typing import Generator, Union
 
 from db.page import Page
 from db.relation import Relation
