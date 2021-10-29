@@ -3,6 +3,7 @@ import pickle
 from typing import Generator, List
 
 from db.operators import csv_scan
+from db.operators.join_predicate import AttrEqAttr
 from db.operators.project import project
 from db.operators.select import select
 from db.operators.cross_product import cross_product
@@ -22,21 +23,16 @@ def _same_attributes(r1, r2) -> List:
                 attrs.append(c1)
     return attrs
 
-def _pages(r1, r2, attrs, f1, f2) -> Generator:
+def _pages(r1, r2, join_attrs, f1, f2) -> Generator:
     print("entering")
     # get cross product
-    rel = cross_product(r1, r2, f1[:-3], f2[:-3])
+    rel = cross_product(r1, r2, f1, f2)
     print(rel.col_names)
-    # TODO store cross in a file
-    fname = "cross_temp.csv"
-    #rel.save(fname)
     # select where join attrs are equal
-    for attr in attrs:
-        a = list()
-        a.append(str(f1[:-3] + attr))
-        a.append(str(f2[:-3] + attr))
-        rel = select(rel,a,fname)
-        #sel.save(fname)
+    for attr in join_attrs:
+        a1 = f1 + '.' + attr
+        a2 = f2 + '.' + attr
+        rel = select(rel, AttrEqAttr(a1, a2))
 
     for r in rel.rows():
        print(r)

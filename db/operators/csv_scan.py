@@ -6,8 +6,8 @@ from ..relation import Relation
 
 def csv_scan(filename: str) -> Relation:
     with open(filename, 'r') as f:
-        col_names = f.readline().split(',')
-    return Relation(col_names, _pages(filename, col_names))
+        col_names = f.readline().strip().split(',')
+    return Relation(col_names, _pages(filename, col_names), filename)
 
 
 def _pages(filename, col_names) -> Generator:

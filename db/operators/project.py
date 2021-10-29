@@ -5,7 +5,10 @@ from db.relation import Relation
 
 
 def project(R: Relation, attrs: List[str]) -> Relation:
-    return Relation(attrs, _pages(R, attrs))
+    if len(attrs) == 0:
+        return R
+    else:
+        return Relation(attrs, _pages(R, attrs))
 
 
 def _pages(R, attrs: List[str]) -> Generator:

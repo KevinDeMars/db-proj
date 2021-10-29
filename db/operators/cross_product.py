@@ -3,25 +3,18 @@ from typing import Generator, List
 from db.page import Page
 from db.relation import Relation
 
+
 # get the cross product of two relations
-def cross_product(rel1: Relation, rel2: Relation, fname1: List[str], fname2: str) -> Relation:
+def cross_product(rel1: Relation, rel2: Relation, fname1: str, fname2: str) -> Relation:
     # create new column name list
     attrs = _column_names(rel1, fname1) + _column_names(rel2, fname2)
     # return the cross product relation
     return Relation(attrs, _pages(rel1, rel2))
 
+
 # get the crossed column names prefixed by relation name
 def _column_names(rel, f):
-    # get the relation column names
-    r = rel.col_names
-    r[-1] = r[-1].strip()
-    # prefix the column names
-    idx = 0
-    for i in r:
-        r[idx] = f + i
-        idx = idx + 1
-    # return the prefixed column names
-    return r
+    return [f + '.' + col_name for col_name in rel.col_names]
 
 # get the crossed pages of the two relations
 def _pages(rel1, rel2) -> Generator:
