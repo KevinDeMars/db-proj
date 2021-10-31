@@ -16,7 +16,7 @@ def execute(query: List[str]):
     elif cmd == 'SELECT':
         # check arg length
         args = query[1:]
-        if len(args) < 4:
+        if len(args) != 4:
             print('Usage: select <input_filename> <output_filename> <attribute> <constraint (attribute or constant)>')
             return
 
@@ -37,7 +37,7 @@ def execute(query: List[str]):
         # check arg length
         args = query[1:]
         if len(args) < 2:
-            print('Usage: project <input_filename> optional: <output_filename> <attributes>')
+            print('Usage: project <input_filename> <output_filename> [attribute]*')
             return
 
         input_file, output_file = args[0], args[1]
@@ -52,7 +52,7 @@ def execute(query: List[str]):
         args = query[1:]
 
         # check for all three params
-        if len(args) < 3:
+        if len(args) != 3:
             print('Usage: cross <input1_filename> <input2_filename> <output_file>')
             return
 
@@ -70,7 +70,7 @@ def execute(query: List[str]):
         args = query[1:]
 
         # check for all three params
-        if len(args) < 3:
+        if len(args) != 3:
             print('Usage: join <input1_filename> <input2_filename> <output_file>')
             return
 

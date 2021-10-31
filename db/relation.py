@@ -56,7 +56,7 @@ class Relation:
             col_lengths.append(max_len)
 
         for line in output_lines:
-            print('| ', end='')
+            print('|', end='')
             for i, col_str in enumerate(line):
                 width = col_lengths[i]
                 print(f' {col_str:>{width}} |', end='')

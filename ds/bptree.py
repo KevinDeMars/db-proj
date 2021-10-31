@@ -107,17 +107,16 @@ class BPlusTree(Generic[K, V]):
         print(node, ':', sep='')
         if isinstance(node, InternalNode):
             for p, k in zip(node.pointers, node.keys):
-                print(f'{p}|{k}|', end='')
-            print(f'{node.pointers[-1]}')
+                print(f' {p} | {k} |', end='')
+            print(f' {node.pointers[-1]}')
 
             for p in node.pointers:
                 self.print(p)
         elif isinstance(node, LeafNode):
             for p, k in zip(node.pointers, node.keys):
                 # print(f'({len(p)} rows)|{k}')
-                print(f'{p}|{k}|', end='')
-            print(node.next)
-            print()
+                print(f' {p} | {k} |', end='')
+            print(' ' + str(node.next))
 
     @staticmethod
     def load(fname: str) -> 'BPlusTree':
